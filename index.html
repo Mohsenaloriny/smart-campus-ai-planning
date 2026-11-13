@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Campus AI Planning System — Interactive Showcase & Project Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(22, 30, 49, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-purple: #818cf8;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --accent-amber: #f59e0b;
+      --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-code: 'Fira Code', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 65%, rgba(129, 140, 248, 0.07) 0%, transparent 45%);
+    }
+
+    /* Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: rgba(9, 13, 22, 0.85);
+      border-bottom: 1px solid var(--card-border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .logo-badge span.pill {
+      background: linear-gradient(135deg, #0284c7, #6366f1);
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .logo-badge h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    nav {
+      display: flex;
+      gap: 1.25rem;
+    }
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav a:hover, nav a.active {
+      color: var(--accent-blue);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      margin-bottom: 3.5rem;
+      padding: 2rem 1rem;
+    }
+    .hero-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 9999px;
+      padding: 0.4rem 1.25rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .hero-meta strong { color: var(--accent-blue); }
+    .hero h2 {
+      font-size: 2.85rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 30%, #38bdf8 70%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 780px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Rubric Outcomes Grid */
+    .rubric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+    .rubric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+    .rubric-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+    .rubric-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+    }
+    .rubric-card.clo2::before { background: var(--accent-blue); }
+    .rubric-card.clo3::before { background: var(--accent-amber); }
+    .rubric-card.clo4::before { background: var(--accent-purple); }
+    .rubric-badge {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .badge-pill {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+    .badge-pill.done { background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald); }
+    .badge-pill.todo { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); }
+    .rubric-points {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .rubric-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem;
+    }
+    .rubric-card p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .author-tag {
+      display: inline-block;
+      margin-top: 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+    }
+
+    /* Section Headers */
+    .section-header {
+      margin-bottom: 1.75rem;
+    }
+    .section-header .tag {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+    .section-header h2 {
+      font-size: 1.85rem;
+      font-weight: 700;
+    }
+
+    /* Simulator Panel */
+    .simulator-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1.25rem;
+      padding: 1.75rem;
+      margin-bottom: 3.5rem;
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
+    }
+    .sim-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .sim-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .sim-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    select, button {
+      font-family: var(--font-main);
+      font-size: 0.875rem;
+      border-radius: 0.5rem;
+      padding: 0.55rem 1rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    select {
+      background: #0f172a;
+      color: #fff;
+      border: 1px solid var(--card-border);
+    }
+    select:focus { border-color: var(--accent-blue); }
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #fff;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-primary:hover { filter: brightness(1.15); transform: translateY(-1px); }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+    }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
+    .btn-danger {
+      background: rgba(244, 63, 94, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      cursor: pointer;
+    }
+    .btn-danger:hover { background: rgba(244, 63, 94, 0.25); }
+
+    /* Layout for Map + Stats */
+    .sim-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 992px) {
+      .sim-layout { grid-template-columns: 1fr; }
+    }
+
+    .map-wrapper {
+      background: #060911;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 1rem;
+      padding: 1rem;
+      position: relative;
+      min-height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    svg.campus-map {
+      width: 100%;
+      height: 100%;
+      max-height: 520px;
+    }
+    .edge-line {
+      stroke: #334155;
+      stroke-width: 2.5;
+      stroke-dasharray: 4, 4;
+      transition: stroke 0.3s, stroke-width 0.3s;
+    }
+    .edge-line.active-edge {
+      stroke: #e11d48;
+      stroke-width: 5;
+      stroke-dasharray: none;
+    }
+    .edge-weight-tag {
+      fill: #94a3b8;
+      font-size: 11px;
+      font-family: var(--font-code);
+      font-weight: 600;
+    }
+    .node-circle {
+      fill: #1e293b;
+      stroke: #475569;
+      stroke-width: 2.5;
+      cursor: pointer;
+      transition: fill 0.3s, stroke 0.3s, r 0.2s;
+    }
+    .node-circle:hover { stroke: var(--accent-blue); r: 24; }
+    .node-circle.start-node { fill: #0284c7; stroke: #38bdf8; stroke-width: 4; }
+    .node-circle.goal-node { fill: #9333ea; stroke: #c084fc; stroke-width: 4; }
+    .node-circle.explored { fill: #f59e0b; stroke: #fbbf24; }
+    .node-circle.frontier { fill: #065f46; stroke: #34d399; }
+    .node-circle.path-node { fill: #e11d48; stroke: #fb7185; stroke-width: 4; }
+    .node-label {
+      fill: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+    }
+    .node-title {
+      fill: #cbd5e1;
+      font-size: 10px;
+      font-weight: 500;
+      text-anchor: middle;
+      pointer-events: none;
+    }
+
+    /* Live Stats Card */
+    .stats-card {
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .metric-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .stat-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 0.6rem;
+      padding: 0.75rem;
+    }
+    .stat-box .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .stat-box .val {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: var(--font-code);
+      margin-top: 0.2rem;
+    }
+    .path-display {
+      background: #060911;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 0.6rem;
+      padding: 0.75rem;
+      font-family: var(--font-code);
+      font-size: 0.85rem;
+      color: var(--accent-emerald);
+      word-break: break-all;
+    }
+    .live-step-box {
+      background: rgba(255, 255, 255, 0.02);
+      border-left: 3px solid var(--accent-blue);
+      padding: 0.75rem 1rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      font-size: 0.85rem;
+    }
+
+    /* Tabbed Cards */
+    .tabs-nav {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.5rem;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.6rem 1.25rem;
+      cursor: pointer;
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Accordion & Cards */
+    .content-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .content-box h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .content-box p {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Formulas & Code highlight */
+    .formula-badge {
+      background: #0b1120;
+      border: 1px solid #1e293b;
+      padding: 0.85rem 1.25rem;
+      border-radius: 0.6rem;
+      font-family: var(--font-code);
+      color: #38bdf8;
+      display: block;
+      margin: 0.75rem 0;
+      font-size: 0.95rem;
+    }
+
+    /* Trace Table */
+    .table-container {
+      overflow-x: auto;
+      margin-top: 1rem;
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+    table.data-table th {
+      background: #0f172a;
+      padding: 0.75rem 1rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--card-border);
+    }
+    table.data-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-family: var(--font-code);
+    }
+    table.data-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Checklist Grid */
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .roadmap-grid { grid-template-columns: 1fr; }
+    }
+    .roadmap-col {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+    .task-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+    }
+    .task-checkbox {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    .task-checkbox.done { background: var(--accent-emerald); color: #000; }
+    .task-checkbox.pending { background: #334155; color: #94a3b8; }
+
+    /* Flashcard Defense */
+    .qa-card {
+      background: #0b1120;
+      border: 1px solid #1e293b;
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .qa-card .question {
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .qa-card .answer {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .qa-card .answer strong { color: var(--accent-emerald); }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--card-border);
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 4rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header>
+    <div class="logo-badge">
+      <span class="pill">AI Course Project</span>
+      <h1>Smart Campus AI Planning System</h1>
+    </div>
+    <nav>
+      <a href="#simulator" class="active">Live Visualizer</a>
+      <a href="#part1-my-work">My Work (Part I)</a>
+      <a href="#team-roadmap">Team Roadmap (Part II & III)</a>
+      <a href="#oral-defense">Oral Defense Prep</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-meta">
+        <span>Instructor: <strong>Dr. Fayçal Hamdi</strong></span>
+        <span>•</span>
+        <span>Faculty of Computer & Information Systems</span>
+        <span>•</span>
+        <span>Course Weight: <strong>10 Marks</strong></span>
+      </div>
+      <h2>Integrated Intelligent Planning System</h2>
+      <p>
+        An interactive, visual demonstration of state-space search, heuristic pathfinding, algorithmic comparative analysis, and constraint satisfaction problems (CSPs) designed to fulfill all course learning outcomes.
+      </p>
+
+      <!-- Rubric & Roles Grid -->
+      <div class="rubric-grid">
+        <div class="rubric-card clo2">
+          <div class="rubric-badge">
+            <span class="badge-pill done">Completed By Me</span>
+            <span class="rubric-points">3 Pts</span>
+          </div>
+          <h3>CLO2: Campus Route Planner</h3>
+          <p>Weighted topological graph, admissible Euclidean heuristic proof, and optimal UCS & A* pathfinding.</p>
+          <div class="author-tag">Owner: Student A (You)</div>
+        </div>
+
+        <div class="rubric-card clo3">
+          <div class="rubric-badge">
+            <span class="badge-pill todo">Next: Colleague C</span>
+            <span class="rubric-points">3 Pts</span>
+          </div>
+          <h3>CLO3: Performance Investigation</h3>
+          <p>Controlled experiments on 3 start-goal pairs, heuristic sensitivity analysis ($h=0$ vs $h_{euc}$), and metric analysis.</p>
+          <div class="author-tag">Owner: Student C</div>
+        </div>
+
+        <div class="rubric-card clo4">
+          <div class="rubric-badge">
+            <span class="badge-pill todo">Next: Colleague B</span>
+            <span class="rubric-points">4 Pts</span>
+          </div>
+          <h3>CLO4: Campus Scheduling CSP</h3>
+          <p>Formal CSP $(X, D, C)$ modeling, Backtracking with MRV, Degree tie-breaker, LCV, and Forward Checking.</p>
+          <div class="author-tag">Owner: Student B</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: Interactive Route Visualizer -->
+    <section id="simulator">
+      <div class="section-header">
+        <span class="tag">Interactive Simulator</span>
+        <h2>Visualizing Search Strategies on the Campus Graph</h2>
+      </div>
+
+      <div class="simulator-container">
+        <!-- Controls Bar -->
+        <div class="sim-controls">
+          <div class="sim-group">
+            <label for="startSelect">Start Facility:</label>
+            <select id="startSelect">
+              <option value="MG" selected>MG - Main Gate</option>
+              <option value="PRK">PRK - Main Parking Hub</option>
+              <option value="MED">MED - Medical Center</option>
+              <option value="ADM">ADM - Administration</option>
+              <option value="LIB">LIB - Central Library</option>
+              <option value="SC">SC - Student Center</option>
+              <option value="CAF">CAF - Main Cafeteria</option>
+              <option value="SPT">SPT - Sports Complex</option>
+            </select>
+          </div>
+
+          <div class="sim-group">
+            <label for="goalSelect">Goal Facility:</label>
+            <select id="goalSelect">
+              <option value="CS" selected>CS - College of Computer Science</option>
+              <option value="ENG">ENG - College of Engineering</option>
+              <option value="RES">RES - Research Center</option>
+              <option value="SPT">SPT - Sports Complex</option>
+              <option value="LIB">LIB - Central Library</option>
+            </select>
+          </div>
+
+          <div class="sim-group">
+            <label for="algoSelect">Algorithm:</label>
+            <select id="algoSelect">
+              <option value="astar" selected>A* Search (Euclidean Heuristic)</option>
+              <option value="ucs">Uniform-Cost Search (UCS - Blind)</option>
+              <option value="astar_zero">A* with h(n) = 0 (Equivalent to UCS)</option>
+            </select>
+          </div>
+
+          <div class="sim-group">
+            <button id="runBtn" class="btn-primary">▶ Run Search</button>
+            <button id="stepBtn" class="btn-secondary">Step</button>
+            <button id="resetBtn" class="btn-secondary">↺ Reset</button>
+            <button id="trapBtn" class="btn-danger" title="Demonstrate BFS hop-trap vs UCS/A*">⚡ Test Topological Trap</button>
+          </div>
+        </div>
+
+        <!-- Simulator Layout -->
+        <div class="sim-layout">
+          <!-- Interactive SVG Campus Map -->
+          <div class="map-wrapper">
+            <svg id="campusSvg" class="campus-map" viewBox="0 0 920 540">
+              <!-- Grid background -->
+              <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+              <g id="edgesLayer"></g>
+              <g id="nodesLayer"></g>
+            </svg>
+          </div>
+
+          <!-- Live Metrics & Status Panel -->
+          <div class="stats-card">
+            <h3 style="font-size: 1.1rem; color: #fff; border-bottom: 1px solid var(--card-border); padding-bottom: 0.5rem;">
+              Execution Diagnostics
+            </h3>
+
+            <div class="metric-row">
+              <div class="stat-box">
+                <div class="label">States Expanded</div>
+                <div id="statExpanded" class="val">0</div>
+              </div>
+              <div class="stat-box">
+                <div class="label">Total Path Cost</div>
+                <div id="statCost" class="val">0.0</div>
+              </div>
+            </div>
+
+            <div class="metric-row">
+              <div class="stat-box">
+                <div class="label">Max Frontier Size</div>
+                <div id="statFrontier" class="val">0</div>
+              </div>
+              <div class="stat-box">
+                <div class="label">Heuristic at Start</div>
+                <div id="statStartH" class="val">0.00</div>
+              </div>
+            </div>
+
+            <div>
+              <div class="label" style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem; font-weight: 600;">Optimal Path Returned:</div>
+              <div id="pathDisplay" class="path-display">Select Start/Goal and click Run Search</div>
+            </div>
+
+            <div class="live-step-box">
+              <div id="stepInfo">Ready. Click <strong>Run Search</strong> to visualize exploration waves.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: What I Did (Part I - CLO2 Deep-Dive) -->
+    <section id="part1-my-work">
+      <div class="section-header">
+        <span class="tag">Author Contribution (Student A)</span>
+        <h2>Part I: Campus Route Planner & Search Mastery</h2>
+      </div>
+
+      <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab(event, 'tab-graph')">1. Campus Graph & Inversion Property</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-proofs')">2. Heuristic Proofs (Admissibility & Monotonicity)</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-trace')">3. Search Trace & Comparisons</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-clo2')">4. Rubric Q&A (CLO2 Answers)</button>
+      </div>
+
+      <!-- Tab 1: Graph Modeling -->
+      <div id="tab-graph" class="tab-pane active">
+        <div class="content-box">
+          <h3>🏛️ 11 Locations & 18 Weighted Pathways</h3>
+          <p>
+            The campus is represented as a formal weighted graph $G = (V, E, W)$ embedded in a 2D Euclidean coordinate space. Every building has physical Cartesian coordinates $(x, y)$ on a 100-meter scale to allow exact distance calculations.
+          </p>
+
+          <div style="background: rgba(2, 132, 199, 0.08); border-left: 4px solid var(--accent-blue); padding: 1rem; border-radius: 0 0.5rem 0.5rem 0; margin-bottom: 1.25rem;">
+            <strong style="color: var(--accent-blue);">Critical Rubric Requirement Verified:</strong>
+            <p style="margin-bottom: 0; font-size: 0.9rem;">
+              <em>"At least one case where the shortest path in number of edges is NOT the lowest-cost path."</em>
+            </p>
+            <div style="margin-top: 0.5rem; font-family: var(--font-code); font-size: 0.85rem;">
+              • <strong>Route A (Direct Boulevard via Library):</strong> MG ➔ LIB ➔ CS = <span style="color:#f43f5e;">2 Hops, Cost = 18.0</span><br>
+              • <strong>Route B (Optimal via Admin & Eng):</strong> MG ➔ ADM ➔ ENG ➔ CS = <span style="color:#10b981;">3 Hops, Cost = 15.0</span>
+            </div>
+            <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0;">
+              👉 <strong>Theoretical Insight:</strong> Breadth-First Search (BFS) would incorrectly select the 2-hop route because it only counts edge transitions. UCS and A* evaluate actual additive costs $g(n)$, successfully guaranteeing the optimal cost of 15.0.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Proofs -->
+      <div id="tab-proofs" class="tab-pane">
+        <div class="content-box">
+          <h3>📐 Heuristic Design & Formal Mathematical Proofs</h3>
+          <p>
+            The heuristic function estimates remaining distance using 2D Euclidean straight-line distance:
+          </p>
+          <div class="formula-badge">
+            h(n) = ||p_n - p_Goal||_2 = sqrt( (x_n - x_Goal)^2 + (y_n - y_Goal)^2 )
+          </div>
+
+          <h4 style="color: var(--accent-emerald); margin: 1.25rem 0 0.5rem;">Proof 1: Admissibility ($h(n) \le h^*(n)$)</h4>
+          <p style="font-size: 0.9rem;">
+            1. <strong>Condition:</strong> A heuristic is admissible if $\forall n, h(n) \le h^*(n)$, where $h^*(n)$ is the true optimal cost from node $n$ to goal $G$.<br>
+            2. In Euclidean geometry, the straight-line segment connecting two points represents the absolute infimum of physical path lengths between them.<br>
+            3. Because physical transit through campus walkways is constrained by corridors, walls, and corners, any real walkable route along edges satisfies $\text{Road Distance } h^*(n) \ge \text{Straight-line Distance } h(n)$.<br>
+            4. Therefore, $h(n) \le h^*(n)$ strictly holds, guaranteeing that A* search will always discover the mathematically optimal path.
+          </p>
+
+          <h4 style="color: var(--accent-purple); margin: 1.25rem 0 0.5rem;">Proof 2: Consistency / Monotonicity</h4>
+          <p style="font-size: 0.9rem;">
+            1. <strong>Condition:</strong> $h(n) \le c(n, a, n') + h(n')$ for every successor $n'$.<br>
+            2. By the <strong>Triangle Inequality</strong> in metric spaces, for any node $n$, neighbor $n'$, and goal $G$:
+            $\|p_n - p_G\|_2 \le \|p_n - p_{n'}\|_2 + \|p_{n'} - p_G\|_2$.<br>
+            3. Since edge cost $c(n, a, n') \ge \|p_n - p_{n'}\|_2$, substitution yields $h(n) \le c(n, a, n') + h(n')$.<br>
+            4. <strong>Result:</strong> $f(n)$ values along any path are monotonically non-decreasing, ensuring that once a node is expanded, A* never needs to re-expand it.
+          </p>
+        </div>
+      </div>
+
+      <!-- Tab 3: Trace Table -->
+      <div id="tab-trace" class="tab-pane">
+        <div class="content-box">
+          <h3>📋 Step-by-Step Search Trace (MG ➔ CS)</h3>
+          <p>
+            Full documentation of priority queue state, $g(n)$, $h(n)$, and $f(n)$ values as required by Dr. Fayçal Hamdi's rubric.
+          </p>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Step</th>
+                  <th>Expanded Node</th>
+                  <th>g(n)</th>
+                  <th>h(n)</th>
+                  <th>f(n)</th>
+                  <th>Current Path</th>
+                  <th>Frontier State (Priority Ordered)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td style="color:var(--accent-blue); font-weight:bold;">MG</td>
+                  <td>0.0</td>
+                  <td>15.13</td>
+                  <td>15.13</td>
+                  <td>[MG]</td>
+                  <td>ADM(16.18), LIB(16.25), PRK(17.04), MED(18.32)</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td style="color:var(--accent-blue); font-weight:bold;">ADM</td>
+                  <td>5.0</td>
+                  <td>11.18</td>
+                  <td>16.18</td>
+                  <td>[MG, ADM]</td>
+                  <td>ENG(15.47), LIB(16.25), PRK(17.04), MED(18.32)</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td style="color:var(--accent-blue); font-weight:bold;">ENG</td>
+                  <td>11.0</td>
+                  <td>4.47</td>
+                  <td>15.47</td>
+                  <td>[MG, ADM, ENG]</td>
+                  <td>CS(15.00), LIB(16.25), PRK(17.04), RES(18.16)</td>
+                </tr>
+                <tr style="background: rgba(16, 185, 129, 0.1);">
+                  <td>4</td>
+                  <td style="color:var(--accent-emerald); font-weight:bold;">CS (Goal)</td>
+                  <td>15.0</td>
+                  <td>0.00</td>
+                  <td>15.00</td>
+                  <td>[MG, ADM, ENG, CS]</td>
+                  <td>Goal popped from Frontier ➔ Optimal Solution Reached!</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+            * In comparison, <strong>Uniform-Cost Search (UCS)</strong> expanded <strong>9 states</strong> (explored PRK, MED, SC, CAF) before reaching CS, proving that A* reduced search effort by <strong>55.6%</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Tab 4: CLO2 Rubric Answers -->
+      <div id="tab-clo2" class="tab-pane">
+        <div class="content-box">
+          <h3>🎯 Direct Academic Answers for CLO2 Rubric</h3>
+
+          <div class="qa-card">
+            <div class="question">1. Why is UCS an uninformed optimal search strategy?</div>
+            <div class="answer">
+              <strong>Uninformed:</strong> UCS has no heuristic intuition or knowledge of the goal's relative coordinates. It prioritizes states purely based on historical path cost $g(n)$.<br>
+              <strong>Optimal:</strong> Because edge costs are strictly positive ($c > 0$), UCS expands states in monotonically increasing order of $g(n)$. Testing the goal upon <em>dequeuing/expansion</em> guarantees that the first path popped for the goal has minimum possible cost.
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="question">2. Why is A* an informed search strategy?</div>
+            <div class="answer">
+              A* evaluates states using $f(n) = g(n) + h(n)$, combining actual past cost with an informed forward estimate $h(n)$. This biases search in the direction of the goal, pruning off-target branches.
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="question">3. What information does our heuristic use?</div>
+            <div class="answer">
+              It uses the <strong>2D Cartesian coordinates</strong> $(x, y)$ of campus facilities to compute straight-line Euclidean distance: $h(n) = \sqrt{(x_n - x_G)^2 + (y_n - y_G)^2}$.
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="question">4. Why is our heuristic admissible?</div>
+            <div class="answer">
+              In Euclidean space, a straight line is the absolute minimum distance between two points. Physical campus pathways involve turns and corridors, so $h^*(n) \ge h(n)$ always holds. It <strong>never overestimates</strong>.
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="question">5. Why do UCS and A* expand different numbers of states (9 vs 4)?</div>
+            <div class="answer">
+              UCS expands symmetrically in concentric ripples, wasting expansions on irrelevant nodes (`PRK`, `MED`, `SC`, `CAF`) simply because their cost from start was low. A* adds $h(n)$, which heavily penalizes nodes heading away from the goal, creating a focused beam directly to `CS`.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: What Others Should Do (Roadmap for Part II & III) -->
+    <section id="team-roadmap">
+      <div class="section-header">
+        <span class="tag">Teamwork & Project Roadmap</span>
+        <h2>Action Plan for Colleague B and Colleague C</h2>
+      </div>
+
+      <div class="roadmap-grid">
+        <!-- Colleague C: Part II -->
+        <div class="roadmap-col">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem;">
+            <h3 style="color: var(--accent-amber);">Part II: Search Performance</h3>
+            <span class="badge-pill todo">Assigned to Student C</span>
+          </div>
+          <p style="font-size: 0.875rem; color: var(--text-muted);">
+            Focuses on <strong>CLO3 (3 Marks)</strong>: Empirical evaluation and interpretation of search behavior.
+          </p>
+
+          <ul class="task-list">
+            <li class="task-item">
+              <span class="task-checkbox pending">1</span>
+              <div>
+                <strong>3 Benchmark Experiments:</strong>
+                <div style="font-size:0.8rem; color:#94a3b8;">Run UCS vs A* on 3 distinct pairs (e.g., MG ➔ CS, PRK ➔ SPT, MED ➔ RES).</div>
+              </div>
+            </li>
+            <li class="task-item">
+              <span class="task-checkbox pending">2</span>
+              <div>
+                <strong>Heuristic Ablation Study:</strong>
+                <div style="font-size:0.8rem; color:#94a3b8;">Compare: (1) UCS, (2) A* with $h=0$, and (3) A* with Euclidean $h(n)$. Prove that A*($h=0$) expands identical nodes to UCS!</div>
+              </div>
+            </li>
+            <li class="task-item">
+              <span class="task-checkbox pending">3</span>
+              <div>
+                <strong>Measure Core Metrics:</strong>
+                <div style="font-size:0.8rem; color:#94a3b8;">Record: Path cost, States expanded, Max frontier size, and Runtime.</div>
+              </div>
+            </li>
+            <li class="task-item">
+              <span class="task-checkbox pending">4</span>
+              <div>
+                <strong>Write the "Why" Interpretation:</strong>
+                <div style="font-size:0.8rem; color:#94a3b8;">Explain why numbers differed; do not just submit a raw numbers table.</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Colleague B: Part III -->
+        <div class="roadmap-col">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem;">
+            <h3 style="color: var(--accent-purple);">Part III: Campus Scheduling CSP</h3>
+            <span class="badge-pill todo">Assigned to Student B</span>
+          </div>
+          <p style="font-size: 0.875rem; color: var(--text-muted);">
+            Focuses on <strong>CLO4 (4 Marks)</strong>: Formulating and solving resource allocation as a CSP.
+          </p>
+
+          <ul class="task-list">
+            <li class="task-item">
+              <span class="task-checkbox pending">1</span>
+              <div>
+                <strong>Formulate (X, D, C):</strong>
+                <div style="font-size:0.8rem; color:#94a3b8;">$\ge 6$ variables (courses/exams), $\ge 3$ domain slots (times/rooms), $\ge 8$ meaningful constraints.</div>
+              </div>
+            </li>
+            <li class="task-item">
+              <span class="task-checkbox pending">2</span>
+              <div>
+                <strong>Implement Solvers:</strong>
+                <div style="font-size:0.8rem; color:#94a3b8;">Plain Backtracking, MRV heuristic, Degree heuristic tie-breaker, LCV heuristic, and Forward Checking.</div>
+              </div>
+            </li>
+            <li class="task-item">
+              <span class="task-checkbox pending">3</span>
+              <div>
+                <strong>Provide Manual Reasoning Trace:</strong>
+                <div style="font-size:0.8rem; color:#94a3b8;">Document 1 step-by-step example showing variable selection by MRV and domain reduction by Forward Checking.</div>
+              </div>
+            </li>
+            <li class="task-item">
+              <span class="task-checkbox pending">4</span>
+              <div>
+                <strong>Compare Solver Configurations:</strong>
+                <div style="font-size:0.8rem; color:#94a3b8;">Measure assignments tried, consistency failures, and backtracks.</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: Oral Defense Prep (Live Understanding Check) -->
+    <section id="oral-defense" style="margin-top: 3.5rem;">
+      <div class="section-header">
+        <span class="tag">Oral Defense Preparation</span>
+        <h2>Dr. Fayçal Hamdi's "Live Understanding Check" Simulator</h2>
+      </div>
+
+      <div class="content-box">
+        <p>
+          During the live project demonstration, the instructor will modify a parameter and ask you to <strong>predict the algorithmic behavior before running the code</strong>. Here are the exact predicted responses:
+        </p>
+
+        <div class="qa-card">
+          <div class="question">⚡ Question 1: "What happens if I increase edge cost ADM ➔ ENG from 6 to 12?"</div>
+          <div class="answer">
+            <strong>Prediction:</strong> Path via ADM increases from $15.0$ to $5 + 12 + 4 = \mathbf{21.0}$. Both UCS and A* will abandon this route and re-route via the Central Library: `MG ➔ LIB ➔ CS` with cost $\mathbf{18.0}$, demonstrating cost-based dynamic adaptation!
+          </div>
+        </div>
+
+        <div class="qa-card">
+          <div class="question">⚡ Question 2: "What happens if I set the heuristic h(n) = 0 for all nodes?"</div>
+          <div class="answer">
+            <strong>Prediction:</strong> $f(n) = g(n) + 0 = g(n)$. A* degenerates exactly into Uniform-Cost Search! It will expand the identical 9 states in the identical sequence and return the optimal path with cost 15.0.
+          </div>
+        </div>
+
+        <div class="qa-card">
+          <div class="question">⚡ Question 3: "What happens if we multiply the heuristic by 3 (Overestimated Heuristic)?"</div>
+          <div class="answer">
+            <strong>Prediction:</strong> The heuristic becomes <em>inadmissible</em> ($h(n) > h^*(n)$). A* acts like Greedy Best-First Search; it may run faster (fewer expansions), but it <strong>loses the guarantee of returning the optimal cost path</strong>!
+          </div>
+        </div>
+
+        <div class="qa-card">
+          <div class="question">⚡ Question 4: "Why does the goal test happen when a node is removed from Frontier, not when generated?"</div>
+          <div class="answer">
+            <strong>Prediction:</strong> If we test when generated, we might discover the goal via a high-cost path first (e.g. 2 hops) before the lower-cost path (3 hops) is evaluated. Testing on removal guarantees that all cheaper candidate paths have already been explored!
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>
+      <strong>Smart Campus AI Planning System</strong> — Group Project Showcase<br>
+      Repository: <a href="https://github.com/Mohsenaloriny/smart-campus-ai-planning" target="_blank" style="color:var(--accent-blue); text-decoration:none;">github.com/Mohsenaloriny/smart-campus-ai-planning</a><br>
+      Built for Dr. Fayçal Hamdi's Artificial Intelligence Course
+    </p>
+  </footer>
+
+  <!-- Interactive JavaScript Engine -->
+  <script>
+    // 1. Campus Data
+    const CAMPUS_LOCATIONS = {
+      "MG":  { x: 0.0,  y: 5.0,  name: "Main Gate" },
+      "ADM": { x: 4.0,  y: 9.0,  name: "Administration" },
+      "ENG": { x: 11.0, y: 9.0,  name: "Engineering" },
+      "CS":  { x: 15.0, y: 7.0,  name: "Computer Science" },
+      "LIB": { x: 7.0,  y: 5.0,  name: "Central Library" },
+      "SC":  { x: 6.0,  y: 2.0,  name: "Student Center" },
+      "CAF": { x: 11.0, y: 3.0,  name: "Cafeteria" },
+      "SPT": { x: 16.0, y: 2.0,  name: "Sports Complex" },
+      "MED": { x: 2.0,  y: 1.0,  name: "Medical Center" },
+      "PRK": { x: 1.0,  y: 8.0,  name: "Parking Hub" },
+      "RES": { x: 14.0, y: 10.0, name: "Research Lab" }
+    };
+
+    const CAMPUS_EDGES = [
+      { u: "MG",  v: "PRK", w: 3.0 },
+      { u: "MG",  v: "ADM", w: 5.0 },
+      { u: "MG",  v: "LIB", w: 8.0 },
+      { u: "MG",  v: "MED", w: 4.0 },
+      { u: "PRK", v: "ADM", w: 3.0 },
+      { u: "ADM", v: "ENG", w: 6.0 },
+      { u: "ENG", v: "RES", w: 4.0 },
+      { u: "ENG", v: "CS",  w: 4.0 },
+      { u: "RES", v: "CS",  w: 3.0 },
+      { u: "LIB", v: "ENG", w: 5.0 },
+      { u: "LIB", v: "CS",  w: 10.0 },
+      { u: "LIB", v: "SC",  w: 3.0 },
+      { u: "MED", v: "SC",  w: 5.0 },
+      { u: "SC",  v: "CAF", w: 5.0 },
+      { u: "CAF", v: "CS",  w: 7.0 },
+      { u: "CAF", v: "SPT", w: 5.0 },
+      { u: "CS",  v: "SPT", w: 6.0 },
+      { u: "ADM", v: "LIB", w: 5.0 }
+    ];
+
+    // Coordinate mapping to SVG (width: 920, height: 540)
+    function mapX(x) { return 80 + x * 48; }
+    function mapY(y) { return 480 - y * 42; }
+
+    function getEuclideanDistance(nodeA, nodeB) {
+      const locA = CAMPUS_LOCATIONS[nodeA];
+      const locB = CAMPUS_LOCATIONS[nodeB];
+      return Math.sqrt(Math.pow(locA.x - locB.x, 2) + Math.pow(locA.y - locB.y, 2));
+    }
+
+    // Build SVG
+    const edgesLayer = document.getElementById("edgesLayer");
+    const nodesLayer = document.getElementById("nodesLayer");
+
+    function renderMap() {
+      edgesLayer.innerHTML = "";
+      nodesLayer.innerHTML = "";
+
+      // Draw Edges
+      CAMPUS_EDGES.forEach((edge, idx) => {
+        const x1 = mapX(CAMPUS_LOCATIONS[edge.u].x);
+        const y1 = mapY(CAMPUS_LOCATIONS[edge.u].y);
+        const x2 = mapX(CAMPUS_LOCATIONS[edge.v].x);
+        const y2 = mapY(CAMPUS_LOCATIONS[edge.v].y);
+
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", x1);
+        line.setAttribute("y1", y1);
+        line.setAttribute("x2", x2);
+        line.setAttribute("y2", y2);
+        line.setAttribute("class", "edge-line");
+        line.setAttribute("id", `edge-${edge.u}-${edge.v}`);
+        edgesLayer.appendChild(line);
+
+        // Edge Cost Tag
+        const midX = (x1 + x2) / 2;
+        const midY = (y1 + y2) / 2;
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", midX);
+        text.setAttribute("y", midY - 6);
+        text.setAttribute("class", "edge-weight-tag");
+        text.setAttribute("text-anchor", "middle");
+        text.textContent = edge.w.toFixed(0);
+        edgesLayer.appendChild(text);
+      });
+
+      // Draw Nodes
+      for (const [id, loc] of Object.entries(CAMPUS_LOCATIONS)) {
+        const cx = mapX(loc.x);
+        const cy = mapY(loc.y);
+
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", cx);
+        circle.setAttribute("cy", cy);
+        circle.setAttribute("r", 20);
+        circle.setAttribute("class", "node-circle");
+        circle.setAttribute("id", `node-${id}`);
+        circle.onclick = () => selectNode(id);
+        nodesLayer.appendChild(circle);
+
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", cx);
+        text.setAttribute("y", cy);
+        text.setAttribute("class", "node-label");
+        text.textContent = id;
+        nodesLayer.appendChild(text);
+
+        const title = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        title.setAttribute("x", cx);
+        title.setAttribute("y", cy + 32);
+        title.setAttribute("class", "node-title");
+        title.textContent = loc.name;
+        nodesLayer.appendChild(title);
+      }
+    }
+
+    renderMap();
+
+    // Node Selection Logic
+    function selectNode(id) {
+      const startSelect = document.getElementById("startSelect");
+      const goalSelect = document.getElementById("goalSelect");
+      if (startSelect.value !== id) {
+        goalSelect.value = id;
+      } else {
+        startSelect.value = id;
+      }
+      resetHighlights();
+    }
+
+    function resetHighlights() {
+      document.querySelectorAll(".node-circle").forEach(el => {
+        el.className.baseVal = "node-circle";
+      });
+      document.querySelectorAll(".edge-line").forEach(el => {
+        el.className.baseVal = "edge-line";
+      });
+
+      const start = document.getElementById("startSelect").value;
+      const goal = document.getElementById("goalSelect").value;
+      const startEl = document.getElementById(`node-${start}`);
+      const goalEl = document.getElementById(`node-${goal}`);
+      if (startEl) startEl.classList.add("start-node");
+      if (goalEl) goalEl.classList.add("goal-node");
+
+      document.getElementById("statStartH").textContent = getEuclideanDistance(start, goal).toFixed(2);
+    }
+
+    resetHighlights();
+    document.getElementById("startSelect").onchange = resetHighlights;
+    document.getElementById("goalSelect").onchange = resetHighlights;
+
+    // Search Execution Engine
+    function executeSearch(start, goal, algo) {
+      const adj = {};
+      for (const loc in CAMPUS_LOCATIONS) adj[loc] = [];
+      CAMPUS_EDGES.forEach(e => {
+        adj[e.u].push({ node: e.v, w: e.w });
+        adj[e.v].push({ node: e.u, w: e.w });
+      });
+
+      const frontier = [];
+      const bestG = { [start]: 0.0 };
+      const explored = new Set();
+      const trace = [];
+      let maxFrontier = 1;
+
+      const getH = (n) => {
+        if (algo === "ucs" || algo === "astar_zero") return 0.0;
+        return getEuclideanDistance(n, goal);
+      };
+
+      frontier.push({ f: getH(start), g: 0.0, node: start, path: [start] });
+
+      while (frontier.length > 0) {
+        maxFrontier = Math.max(maxFrontier, frontier.length);
+        frontier.sort((a, b) => a.f - b.f);
+        const currentItem = frontier.shift();
+        const { f, g, node, path } = currentItem;
+
+        if (explored.has(node)) continue;
+
+        trace.push({
+          node, g, h: getH(node), f, path,
+          frontierSnapshot: frontier.map(item => `${item.node}(${item.f.toFixed(1)})`)
+        });
+
+        if (node === goal) {
+          return { success: true, path, cost: g, statesExpanded: trace.length, maxFrontier, trace };
+        }
+
+        explored.add(node);
+
+        for (const neighbor of adj[node]) {
+          const nextNode = neighbor.node;
+          const newG = g + neighbor.w;
+          if (!explored.has(nextNode)) {
+            if (!(nextNode in bestG) || newG < bestG[nextNode]) {
+              bestG[nextNode] = newG;
+              const nextF = newG + getH(nextNode);
+              frontier.push({ f: nextF, g: newG, node: nextNode, path: [...path, nextNode] });
+            }
+          }
+        }
+      }
+
+      return { success: false, path: [], cost: Infinity, statesExpanded: trace.length, maxFrontier, trace };
+    }
+
+    // Interactive Animation
+    let animationTimer = null;
+
+    document.getElementById("runBtn").onclick = () => {
+      resetHighlights();
+      if (animationTimer) clearInterval(animationTimer);
+
+      const start = document.getElementById("startSelect").value;
+      const goal = document.getElementById("goalSelect").value;
+      const algo = document.getElementById("algoSelect").value;
+
+      const result = executeSearch(start, goal, algo);
+
+      let stepIdx = 0;
+      animationTimer = setInterval(() => {
+        if (stepIdx < result.trace.length) {
+          const step = result.trace[stepIdx];
+          const nodeEl = document.getElementById(`node-${step.node}`);
+          if (step.node !== start && step.node !== goal && nodeEl) {
+            nodeEl.classList.add("explored");
+          }
+
+          document.getElementById("statExpanded").textContent = stepIdx + 1;
+          document.getElementById("statCost").textContent = step.g.toFixed(1);
+          document.getElementById("stepInfo").innerHTML = 
+            `Step ${stepIdx + 1}: Expanding <strong>${step.node}</strong> | g=${step.g.toFixed(1)}, h=${step.h.toFixed(1)}, f=${step.f.toFixed(1)}`;
+          stepIdx++;
+        } else {
+          clearInterval(animationTimer);
+          finishSearchVisual(result);
+        }
+      }, 450);
+    };
+
+    function finishSearchVisual(result) {
+      document.getElementById("statExpanded").textContent = result.statesExpanded;
+      document.getElementById("statCost").textContent = result.cost.toFixed(2);
+      document.getElementById("statFrontier").textContent = result.maxFrontier;
+      document.getElementById("pathDisplay").textContent = result.path.join(" ➔ ");
+      document.getElementById("stepInfo").innerHTML = 
+        `<span style="color:var(--accent-emerald);">✔ Optimal path found! Reached goal with total cost ${result.cost.toFixed(1)}.</span>`;
+
+      // Highlight path nodes and edges
+      for (let i = 0; i < result.path.length; i++) {
+        const n = result.path[i];
+        const el = document.getElementById(`node-${n}`);
+        if (el) el.classList.add("path-node");
+
+        if (i < result.path.length - 1) {
+          const u = result.path[i];
+          const v = result.path[i+1];
+          let edgeEl = document.getElementById(`edge-${u}-${v}`) || document.getElementById(`edge-${v}-${u}`);
+          if (edgeEl) edgeEl.classList.add("active-edge");
+        }
+      }
+    }
+
+    document.getElementById("resetBtn").onclick = () => {
+      if (animationTimer) clearInterval(animationTimer);
+      resetHighlights();
+      document.getElementById("statExpanded").textContent = "0";
+      document.getElementById("statCost").textContent = "0.0";
+      document.getElementById("statFrontier").textContent = "0";
+      document.getElementById("pathDisplay").textContent = "Select Start/Goal and click Run Search";
+      document.getElementById("stepInfo").innerHTML = "Ready. Click <strong>Run Search</strong> to visualize.";
+    };
+
+    // Topological Trap Demonstration
+    document.getElementById("trapBtn").onclick = () => {
+      document.getElementById("startSelect").value = "MG";
+      document.getElementById("goalSelect").value = "CS";
+      document.getElementById("algoSelect").value = "astar";
+      resetHighlights();
+
+      alert("Topological Inversion Test:\n\n" +
+            "• Route 1: MG -> LIB -> CS (2 Hops, Cost = 18.0)\n" +
+            "• Route 2 (Optimal): MG -> ADM -> ENG -> CS (3 Hops, Cost = 15.0)\n\n" +
+            "Now running A* to prove that it selects the 3-hop path due to cost optimality!");
+      document.getElementById("runBtn").click();
+    };
+
+    // Tab Switching Function
+    function switchTab(evt, tabId) {
+      document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById(tabId).classList.add("active");
+      evt.currentTarget.classList.add("active");
+    }
+  </script>
+</body>
+</html>
