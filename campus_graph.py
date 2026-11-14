@@ -3,11 +3,14 @@ Smart Campus AI Planning System - Part I: Campus Route Planner
 Course: Artificial Intelligence (CLO2) - Dr. Fayçal Hamdi
 
 This module defines:
-1. The Campus Graph (Locations, Coordinates, Weighted Edges).
-2. Admissible Heuristic Function (Euclidean Straight-Line Distance).
+1. The Campus Graph (11 Locations, Coordinates, 18 Weighted Edges).
+   Note: Every edge weight w(u, v) >= Euclidean(u, v), guaranteeing that
+   the Euclidean straight-line distance heuristic is STRICTLY ADMISSIBLE
+   (h(n) <= h*(n)) and CONSISTENT across all 121 node pairs.
+2. Admissible Euclidean Heuristic Function.
 3. Uniform-Cost Search (UCS).
 4. A* Search.
-5. Trace and Logging utilities for detailed analysis.
+5. Trace and Logging utilities.
 """
 
 import math
@@ -17,7 +20,6 @@ from typing import Dict, List, Tuple, Optional, Any
 # ==============================================================================
 # 1. CAMPUS GRAPH SPECIFICATION
 # ==============================================================================
-# Requirement: At least 10 locations, 2D coordinates for heuristic calculation.
 CAMPUS_LOCATIONS: Dict[str, Tuple[float, float, str]] = {
     "MG":  (0.0, 5.0,  "Main Gate"),
     "ADM": (4.0, 9.0,  "Administration Building"),
@@ -29,31 +31,32 @@ CAMPUS_LOCATIONS: Dict[str, Tuple[float, float, str]] = {
     "SPT": (16.0, 2.0, "Sports Complex"),
     "MED": (2.0, 1.0,  "Medical Center"),
     "PRK": (1.0, 8.0,  "Main Parking Hub"),
-    "RES": (14.0, 10.0, "Research & Innovation Center") # 11th location
+    "RES": (14.0, 10.0, "Research & Innovation Lab")
 }
 
-# Requirement: At least 15 weighted connections (edges) with positive costs.
-# We define bidirectional connections with edge costs (representing travel cost/distance in hectometers/minutes).
-# Note: Designed specifically so that shortest path by hops is NOT the lowest-cost path!
-# For example: MG -> LIB -> CS is 2 hops (cost: 8 + 10 = 18)
-# Whereas: MG -> ADM -> ENG -> CS is 3 hops (cost: 5 + 6 + 4 = 15) -> Fewer hops has HIGHER cost!
+# Every edge weight w >= Euclidean distance of endpoints:
+# e.g., MG (0,5) to ADM (4,9): Euclidean = sqrt(32) = 5.66 -> Edge weight = 6.0
+# ADM (4,9) to ENG (11,9): Euclidean = 7.00 -> Edge weight = 7.0
+# ENG (11,9) to CS (15,7): Euclidean = sqrt(20) = 4.47 -> Edge weight = 5.0
+# MG -> ADM -> ENG -> CS = 6 + 7 + 5 = 18.0 (3 hops)
+# MG -> LIB -> CS = 9 + 12 = 21.0 (2 hops) -> Hop-count vs Cost inversion preserved!
 CAMPUS_EDGES: List[Tuple[str, str, float]] = [
-    ("MG",  "PRK", 3.0),
-    ("MG",  "ADM", 5.0),
-    ("MG",  "LIB", 8.0),   # Direct but congested avenue (2 hops to CS, total 18)
-    ("MG",  "MED", 4.0),
-    ("PRK", "ADM", 3.0),
-    ("ADM", "ENG", 6.0),
+    ("MG",  "PRK", 4.0),
+    ("MG",  "ADM", 6.0),
+    ("MG",  "LIB", 9.0),   # Congested central boulevard
+    ("MG",  "MED", 5.0),
+    ("PRK", "ADM", 4.0),
+    ("ADM", "ENG", 7.0),
     ("ENG", "RES", 4.0),
-    ("ENG", "CS",  4.0),
-    ("RES", "CS",  3.0),
-    ("LIB", "ENG", 5.0),
-    ("LIB", "CS",  10.0),  # Highway segment
-    ("LIB", "SC",  3.0),
+    ("ENG", "CS",  5.0),
+    ("RES", "CS",  4.0),
+    ("LIB", "ENG", 6.0),
+    ("LIB", "CS",  12.0),  # Highway avenue: 2 hops from MG to CS (cost: 9+12=21)
+    ("LIB", "SC",  4.0),
     ("MED", "SC",  5.0),
-    ("SC",  "CAF", 5.0),
+    ("SC",  "CAF", 6.0),
     ("CAF", "CS",  7.0),
-    ("CAF", "SPT", 5.0),
+    ("CAF", "SPT", 6.0),
     ("CS",  "SPT", 6.0),
     ("ADM", "LIB", 5.0)
 ]
@@ -64,26 +67,25 @@ def build_adjacency_list() -> Dict[str, List[Tuple[str, float]]]:
     for u, v, w in CAMPUS_EDGES:
         adj[u].append((v, w))
         adj[v].append((u, w))
-    # Sort neighbors alphabetically for deterministic execution
     for node in adj:
         adj[node].sort(key=lambda x: x[0])
     return adj
 
 # ==============================================================================
-# 2. HEURISTIC FUNCTION (EUCLIDEAN DISTANCE)
+# 2. HEURISTIC FUNCTIONS
 # ==============================================================================
 def euclidean_heuristic(node: str, goal: str) -> float:
     """
     Calculates straight-line Euclidean distance h(n) between node and goal.
-    Since straight-line distance is the shortest possible path between two points in 2D,
-    h(n) <= h*(n), guaranteeing ADMISSIBILITY and CONSISTENCY.
+    Since w(u, v) >= Euclidean(u, v) for all edges, by the triangle inequality,
+    h(n) <= h*(n) strictly holds for all node pairs (Guaranteed Admissibility).
     """
     x1, y1, _ = CAMPUS_LOCATIONS[node]
     x2, y2, _ = CAMPUS_LOCATIONS[goal]
     return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
 
 def zero_heuristic(node: str, goal: str) -> float:
-    """Trivial heuristic h(n) = 0 for A* (equivalent to UCS)."""
+    """Trivial zero heuristic h(n) = 0 for A* (identical to UCS)."""
     return 0.0
 
 # ==============================================================================
@@ -110,22 +112,12 @@ class SearchResult:
                 f"  - Max Frontier Size: {self.max_frontier_size}")
 
 def uniform_cost_search(start: str, goal: str) -> SearchResult:
-    """
-    Uniform-Cost Search (UCS) on the campus graph.
-    Priority Queue ordered by path cost g(n).
-    Goal check occurs when a node is removed/expanded from the frontier.
-    """
     adj = build_adjacency_list()
-    
-    # Priority queue stores tuples: (g_cost, counter, current_node, path)
     counter = 0
     frontier: List[Tuple[float, int, str, List[str]]] = []
     heapq.heappush(frontier, (0.0, counter, start, [start]))
-    
-    # Best-known g-cost to each state reached
     best_g: Dict[str, float] = {start: 0.0}
     explored: set = set()
-    
     states_expanded = 0
     max_frontier_size = 1
     trace: List[Dict[str, Any]] = []
@@ -133,12 +125,9 @@ def uniform_cost_search(start: str, goal: str) -> SearchResult:
     while frontier:
         max_frontier_size = max(max_frontier_size, len(frontier))
         g_cost, _, current, path = heapq.heappop(frontier)
-
-        # If already explored with a smaller or equal cost, skip
         if current in explored:
             continue
 
-        # Log trace step
         states_expanded += 1
         frontier_snapshot = [(f"{item[2]}(g={item[0]:.1f})") for item in frontier]
         trace.append({
@@ -151,21 +140,10 @@ def uniform_cost_search(start: str, goal: str) -> SearchResult:
             "frontier": frontier_snapshot
         })
 
-        # Goal test on expansion (crucial for optimality)
         if current == goal:
-            return SearchResult(
-                algorithm="Uniform-Cost Search (UCS)",
-                start=start,
-                goal=goal,
-                path=path,
-                cost=g_cost,
-                states_expanded=states_expanded,
-                max_frontier_size=max_frontier_size,
-                trace=trace
-            )
+            return SearchResult("Uniform-Cost Search (UCS)", start, goal, path, g_cost, states_expanded, max_frontier_size, trace)
 
         explored.add(current)
-
         for neighbor, edge_cost in adj[current]:
             new_g = g_cost + edge_cost
             if neighbor not in explored:
@@ -177,22 +155,13 @@ def uniform_cost_search(start: str, goal: str) -> SearchResult:
     return SearchResult("Uniform-Cost Search (UCS)", start, goal, None, float('inf'), states_expanded, max_frontier_size, trace)
 
 def a_star_search(start: str, goal: str, heuristic_func=euclidean_heuristic) -> SearchResult:
-    """
-    A* Search on the campus graph.
-    Priority Queue ordered by evaluation function f(n) = g(n) + h(n).
-    Goal check occurs when a node is removed/expanded from the frontier.
-    """
     adj = build_adjacency_list()
-    
     counter = 0
-    # Frontier stores: (f_cost, g_cost, counter, current_node, path)
     initial_h = heuristic_func(start, goal)
     frontier: List[Tuple[float, float, int, str, List[str]]] = []
     heapq.heappush(frontier, (initial_h, 0.0, counter, start, [start]))
-    
     best_g: Dict[str, float] = {start: 0.0}
     explored: set = set()
-    
     states_expanded = 0
     max_frontier_size = 1
     trace: List[Dict[str, Any]] = []
@@ -200,14 +169,12 @@ def a_star_search(start: str, goal: str, heuristic_func=euclidean_heuristic) -> 
     while frontier:
         max_frontier_size = max(max_frontier_size, len(frontier))
         f_cost, g_cost, _, current, path = heapq.heappop(frontier)
-
         if current in explored:
             continue
 
         states_expanded += 1
         current_h = heuristic_func(current, goal)
         frontier_snapshot = [(f"{item[3]}(f={item[0]:.1f},g={item[1]:.1f})") for item in frontier]
-        
         trace.append({
             "step": states_expanded,
             "expanded_node": current,
@@ -218,41 +185,23 @@ def a_star_search(start: str, goal: str, heuristic_func=euclidean_heuristic) -> 
             "frontier": frontier_snapshot
         })
 
-        # Goal test on expansion
         if current == goal:
-            return SearchResult(
-                algorithm="A* Search",
-                start=start,
-                goal=goal,
-                path=path,
-                cost=g_cost,
-                states_expanded=states_expanded,
-                max_frontier_size=max_frontier_size,
-                trace=trace
-            )
+            return SearchResult("A* Search", start, goal, path, g_cost, states_expanded, max_frontier_size, trace)
 
         explored.add(current)
-
         for neighbor, edge_cost in adj[current]:
             new_g = g_cost + edge_cost
             if neighbor not in explored:
                 if neighbor not in best_g or new_g < best_g[neighbor]:
                     best_g[neighbor] = new_g
                     h_val = heuristic_func(neighbor, goal)
-                    new_f = new_g + h_val
                     counter += 1
-                    heapq.heappush(frontier, (new_f, new_g, counter, neighbor, path + [neighbor]))
+                    heapq.heappush(frontier, (new_g + h_val, new_g, counter, neighbor, path + [neighbor]))
 
     return SearchResult("A* Search", start, goal, None, float('inf'), states_expanded, max_frontier_size, trace)
 
 if __name__ == "__main__":
-    print("Testing Campus Graph & Search Algorithms:")
-    start_node = "MG"
-    goal_node = "CS"
-    
-    res_ucs = uniform_cost_search(start_node, goal_node)
-    print("\n" + res_ucs.summary())
-    
-    res_astar = a_star_search(start_node, goal_node)
-    print("\n" + res_astar.summary())
-
+    res_ucs = uniform_cost_search("MG", "CS")
+    print(res_ucs.summary())
+    res_astar = a_star_search("MG", "CS")
+    print(res_astar.summary())
